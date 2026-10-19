@@ -1,0 +1,363 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>비숍 BESHOP</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700&family=Gothic+A1:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box}
+body{margin:0;background:#fff;color:#111;font-family:'Gothic A1',system-ui,sans-serif;font-size:14px;line-height:1.6;letter-spacing:-.01em}
+button,input,select{font-family:inherit;color:inherit}
+button{cursor:pointer}
+img{display:block;width:100%;height:100%;object-fit:cover}
+.en{font-family:Archivo,sans-serif}
+.label{font-family:Archivo,sans-serif;font-size:11px;letter-spacing:.16em;font-weight:600}
+.muted{color:#6B6B68}
+.wrap{max-width:1440px;margin:0 auto;padding:0 32px}
+.notice{background:#111;color:#fff;text-align:center;padding:9px 16px;font-size:11px;letter-spacing:.14em}
+header{border-bottom:1px solid #ECECEA}
+.hd{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;min-height:68px;gap:16px}
+.nav{display:flex;gap:24px;flex-wrap:wrap}
+.nav button,.bag{background:none;border:0;padding:12px 0;font-family:Archivo,sans-serif;font-size:12px;font-weight:500;letter-spacing:.12em}
+.logo{background:none;border:0;font-size:24px;font-weight:800;letter-spacing:.24em;padding:8px 0}
+.right{justify-self:end;display:flex;align-items:center;gap:8px}
+.icon{width:44px;height:44px;background:none;border:0;display:flex;align-items:center;justify-content:center}
+.hero{display:flex;flex-wrap:wrap}
+.hero>div{flex:1 1 480px;min-width:0;height:680px;position:relative;overflow:hidden;background:#DEDCD8}
+.hero img{object-position:50% 20%}
+.hero .cap{position:absolute;left:32px;right:32px;bottom:32px;display:flex;flex-wrap:wrap;justify-content:space-between;align-items:flex-end;gap:16px}
+.hero h1{margin:6px 0 0;font-size:44px;line-height:1.1;font-weight:800;letter-spacing:-.03em}
+.btn{min-height:52px;padding:0 28px;border:0;background:#111;color:#fff;font-size:14px;font-weight:600}
+.btn.en{font-size:12px;letter-spacing:.14em}
+.btn.line{background:#fff;color:#111;border:1px solid #111}
+.btn:disabled{background:#D4D3CF;color:#4A4A47;cursor:not-allowed}
+.sec{padding:64px 32px 96px}
+.sec-hd{display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:20px;margin-bottom:28px}
+.sec-hd h2{margin:4px 0 0;font-size:26px;font-weight:700;letter-spacing:-.02em}
+.tabs{display:flex;gap:22px;flex-wrap:wrap}
+.tab{min-height:44px;padding:0;background:none;border:0;border-bottom:1px solid transparent;color:#6B6B68;font-family:Archivo,sans-serif;font-size:12px;font-weight:500;letter-spacing:.14em}
+.tab.on{color:#111;border-color:#111;font-weight:600}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));column-gap:16px;row-gap:44px}
+.card{display:flex;flex-direction:column;gap:14px;text-align:left;background:none;border:0;padding:0}
+.thumb{width:100%;aspect-ratio:4/5;position:relative;overflow:hidden;background:#DEDCD8}
+.thumb img{transition:transform .5s}
+.card:hover .thumb img{transform:scale(1.03)}
+.new{position:absolute;top:12px;left:12px;background:#fff;padding:4px 8px;font-size:10px}
+.dots{display:flex;gap:6px;margin-top:4px}
+.dot{width:10px;height:10px;border-radius:5px;border:1px solid rgba(0,0,0,.18)}
+.back{display:inline-flex;align-items:center;gap:6px;min-height:44px;background:none;border:0;padding:0;color:#6B6B68;font-family:Archivo,sans-serif;font-size:11px;letter-spacing:.14em}
+.detail{display:flex;flex-wrap:wrap;gap:56px;margin-top:8px}
+.gallery{flex:999 1 520px;min-width:0;display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:8px}
+.zoom img{transform:scale(1.9);transform-origin:50% 32%}
+.info{flex:1 1 340px;min-width:0;max-width:440px;display:flex;flex-direction:column;gap:28px}
+.info h1{margin:0;font-size:26px;font-weight:600;letter-spacing:-.02em;line-height:1.3}
+.sw{width:36px;height:36px;padding:3px;border-radius:18px;border:1px solid transparent;background:#fff}
+.sw.on{border-color:#111}
+.sw span{display:block;width:100%;height:100%;border-radius:50%;border:1px solid rgba(0,0,0,.15)}
+.sizes{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:6px}
+.size{min-height:46px;border:1px solid #D6D6D2;background:#fff;font-family:Archivo,sans-serif;font-size:13px}
+.size.on{background:#111;color:#fff;border-color:#111}
+.err{font-size:12px;color:#A1361F}
+.rows{border-top:1px solid #E3E3E0}
+.rows div{display:flex;justify-content:space-between;gap:16px;padding:16px 0;border-bottom:1px solid #E3E3E0;font-size:13px}
+.rows span:last-child{color:#6B6B68;text-align:right}
+.co{max-width:1240px;margin:0 auto;padding:40px 32px 96px}
+.co-grid{display:flex;flex-wrap:wrap;gap:56px;align-items:flex-start}
+.co-form{flex:999 1 560px;min-width:0;display:flex;flex-direction:column;gap:48px}
+.co h2.step{margin:0 0 20px;padding-bottom:12px;border-bottom:1px solid #111}
+.fields{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:20px}
+.f{display:flex;flex-direction:column;gap:4px;font-size:12px;color:#6B6B68}
+.f input,.f select{min-height:44px;padding:0;border:0;border-bottom:1px solid #CFCFCB;font-size:15px;color:#111;background:transparent;border-radius:0}
+.f input:focus,.f select:focus{outline:none;border-color:#111}
+.method{display:flex;align-items:center;gap:14px;width:100%;min-height:56px;padding:0 4px;background:none;border:0;border-bottom:1px solid #ECECEA;font-size:14px;text-align:left}
+.radio{width:18px;height:18px;border-radius:9px;border:1px solid #A8A8A4;flex-shrink:0}
+.method.on .radio{border:6px solid #111}
+aside{flex:1 1 340px;min-width:0;background:#F4F3F0;padding:32px 28px;display:flex;flex-direction:column;gap:18px}
+.line-item{display:flex;gap:14px;align-items:flex-start}
+.line-item .thumb{width:72px;flex-shrink:0}
+.sum{display:flex;justify-content:space-between}
+.link{background:none;border:0;padding:0;color:#6B6B68;font-size:12px;text-decoration:underline}
+.agree{display:flex;gap:10px;align-items:flex-start;font-size:12px;color:#4A4A47;cursor:pointer}
+.agree input{width:18px;height:18px;margin:1px 0 0;accent-color:#111;flex-shrink:0}
+.done{max-width:560px;margin:0 auto;padding:96px 32px 120px;display:flex;flex-direction:column;align-items:center;gap:18px;text-align:center}
+.done .rows{width:100%;margin-top:24px;border-top:1px solid #111;text-align:left}
+.toast{position:fixed;right:24px;bottom:24px;width:360px;max-width:calc(100% - 48px);background:#fff;border:1px solid #111;padding:16px;display:flex;flex-direction:column;gap:14px;box-shadow:0 12px 32px rgba(0,0,0,.12)}
+.toast .thumb{width:52px}
+footer{border-top:1px solid #ECECEA}
+footer .wrap{padding:32px;display:flex;flex-wrap:wrap;justify-content:space-between;gap:12px;font-size:12px;color:#6B6B68}
+@media (max-width:640px){
+  .wrap,.sec,.co{padding-left:16px;padding-right:16px}
+  .nav{display:none}
+  .hd{grid-template-columns:auto 1fr}
+  .hero>div{height:520px}
+  .hero h1{font-size:32px}
+}
+</style>
+</head>
+<body>
+<div class="notice en">MOCKUP STORE — 실제 결제는 이뤄지지 않습니다</div>
+<header>
+  <div class="wrap hd">
+    <nav class="nav">
+      <button data-go="home">NEW IN</button>
+      <button data-go="shop">MEN</button>
+      <button data-go="home">LOOKBOOK</button>
+    </nav>
+    <button class="logo" data-go="home">비숍</button>
+    <div class="right">
+      <button class="icon" aria-label="검색"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="6.5"/><path d="M16 16l4.5 4.5"/></svg></button>
+      <button class="bag" data-go="checkout">BAG (<span id="bagCount">0</span>)</button>
+    </div>
+  </div>
+</header>
+<div id="app"></div>
+<div id="toast"></div>
+<footer>
+  <div class="wrap"><span style="font-weight:800;letter-spacing:.24em;color:#111;font-size:14px">비숍</span><span>고객센터 [YOUR PHONE] · [YOUR EMAIL]</span></div>
+</footer>
+
+<script>
+const TOP = ['S','M','L','XL','XXL'], BOTTOM = ['28','30','32','34','36'];
+const PRODUCTS = [
+  { id:'p7', name:'싱글 발마칸 코트', cat:'OUTER', price:289000, img:'images/look07.jpg', isNew:true, sizes:TOP, fabric:'코튼 100% · 드라이클리닝', colors:[['베이지','#C4AE8A'],['블랙','#222221']], desc:'라글란 소매로 어깨선을 부드럽게 떨어뜨린 발마칸 코트. 무릎 아래 기장으로 어떤 룩에도 여유를 더해요.' },
+  { id:'p1', name:'네이비 린넨 블레이저', cat:'OUTER', price:189000, img:'images/look01.jpg', isNew:true, sizes:TOP, fabric:'린넨 55% · 코튼 45% · 드라이클리닝', colors:[['네이비','#1F2A44'],['베이지','#CDBF9F']], desc:'언컨스트럭티드 구조로 가볍게 걸치는 2버튼 블레이저. 티셔츠와 매치해 캐주얼하게 입기 좋아요.' },
+  { id:'p2', name:'블랙 해링턴 블루종', cat:'OUTER', price:169000, img:'images/look02.jpg', isNew:false, sizes:TOP, fabric:'폴리 65% · 코튼 35% · 물세탁', colors:[['블랙','#1C1C1B'],['카키','#6B6A4E']], desc:'셔츠 칼라와 밴딩 밑단의 크롭 블루종. 투웨이 지퍼로 실루엣을 조절할 수 있어요.' },
+  { id:'p6', name:'인디고 데님 트러커', cat:'OUTER', price:139000, img:'images/look06.jpg', isNew:false, sizes:TOP, fabric:'코튼 100% · 단독 물세탁', colors:[['인디고','#24304C']], desc:'원워시 인디고 데님으로 만든 트러커 자켓. 입을수록 자연스러운 워싱이 생겨요.' },
+  { id:'p5', name:'와플 니트 카디건', cat:'KNIT', price:119000, img:'images/look05.jpg', isNew:true, sizes:TOP, fabric:'울 50% · 아크릴 50% · 손세탁', colors:[['브라운','#4A2E1F'],['차콜','#3A3A38']], desc:'입체적인 와플 조직의 V넥 카디건. 도톰하지만 무겁지 않은 두께감.' },
+  { id:'p9', name:'울 라운드 니트', cat:'KNIT', price:129000, img:'images/look09.jpg', isNew:false, sizes:TOP, fabric:'울 100% · 손세탁', colors:[['오트밀','#CFC6B6'],['그레이','#8E8C87']], desc:'부드러운 메리노 울로 짠 베이직 라운드 니트. 단독으로도, 코트 안 이너로도 좋아요.' },
+  { id:'p4', name:'올리브 코튼 오버셔츠', cat:'TOP', price:89000, img:'images/look04.jpg', isNew:false, sizes:TOP, fabric:'코튼 100% · 물세탁', colors:[['올리브','#4E5232'],['블랙','#222221']], desc:'단단한 코튼 트윌의 오버셔츠. 티셔츠 위에 가벼운 아우터처럼 걸치기 좋아요.' },
+  { id:'p8', name:'옥스포드 버튼다운 셔츠', cat:'TOP', price:69000, img:'images/look08.jpg', isNew:false, sizes:TOP, fabric:'코튼 100% · 물세탁', colors:[['스카이 블루','#9DB4DB'],['화이트','#F5F5F3']], desc:'버튼다운 칼라의 클래식 옥스포드 셔츠. 소매를 걷어 캐주얼하게 연출해 보세요.' },
+  { id:'p3', name:'헤비 스웨트 후디', cat:'TOP', price:79000, img:'images/look03.jpg', isNew:true, sizes:TOP, fabric:'코튼 100% · 물세탁', colors:[['멜란지 그레이','#A9A9A6'],['블랙','#222221']], desc:'쫀쫀한 기모 스웨트로 만든 오버핏 후디. 넉넉한 캥거루 포켓.' },
+  { id:'p10', name:'투턱 와이드 슬랙스', cat:'BOTTOM', price:99000, img:'images/look10.jpg', isNew:false, sizes:BOTTOM, fabric:'울 30% · 폴리 70% · 드라이클리닝', colors:[['블랙','#1C1C1B'],['차콜','#3A3936']], desc:'투턱 디테일로 여유를 준 와이드 슬랙스. 발등을 덮는 기장으로 곧게 떨어져요.' }
+];
+const METHODS = [
+  ['card','신용 / 체크카드','카드사 결제창 연결 (목업)'],
+  ['easy','간편결제','간편결제 앱 연결 (목업)'],
+  ['bank','무통장입금','24시간 이내 입금'],
+  ['phone','휴대폰 결제','본인 인증 후 결제']
+];
+
+const S = { screen:'home', cat:'ALL', selId:'p7', color:0, size:null, sizeHint:false, cart:[], method:'card', agree:false, buyer:'', done:null };
+const app = document.getElementById('app');
+const won = n => '₩' + n.toLocaleString('ko-KR');
+const find = id => PRODUCTS.find(p => p.id === id) || PRODUCTS[0];
+const esc = s => String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+let toastTimer;
+
+function go(screen, extra = {}) {
+  Object.assign(S, { screen }, extra);
+  render();
+  window.scrollTo(0, 0);
+}
+function totals() {
+  const sub = S.cart.reduce((n, it) => n + find(it.id).price * it.qty, 0);
+  const ship = sub === 0 || sub >= 100000 ? 0 : 3000;
+  return { sub, ship, total: sub + ship, count: S.cart.reduce((n, it) => n + it.qty, 0) };
+}
+function addCurrent() {
+  const hit = S.cart.find(it => it.id === S.selId && it.color === S.color && it.size === S.size);
+  if (hit) hit.qty++; else S.cart.push({ id: S.selId, color: S.color, size: S.size, qty: 1 });
+}
+const card = p => `
+  <button class="card" data-open="${p.id}">
+    <div class="thumb"><img src="${p.img}" alt="${esc(p.name)}" loading="lazy">${p.isNew ? '<span class="new label">NEW</span>' : ''}</div>
+    <div style="display:flex;flex-direction:column;gap:4px">
+      <span style="font-size:13px;font-weight:500">${esc(p.name)}</span>
+      <span class="en" style="font-size:13px">${won(p.price)}</span>
+      <div class="dots">${p.colors.map(c => `<span class="dot" style="background:${c[1]}"></span>`).join('')}</div>
+    </div>
+  </button>`;
+
+function homeView() {
+  const list = PRODUCTS.filter(p => S.cat === 'ALL' || p.cat === S.cat);
+  return `
+  <section class="hero">
+    <div><img src="images/look07.jpg" alt="베이지 발마칸 코트를 입은 모델">
+      <div class="cap"><div><span class="label">FALL / WINTER 2026</span><h1>조용한 레이어링</h1></div></div></div>
+    <div><img src="images/look02.jpg" alt="블랙 블루종을 입은 모델">
+      <div class="cap"><p style="margin:0;max-width:280px;font-weight:500">울과 코튼, 차분한 컬러로 완성한 이번 시즌 맨즈 컬렉션.</p>
+      <button class="btn en" data-go="shop" style="min-height:44px;padding:0 22px">SHOP NOW</button></div></div>
+  </section>
+  <section class="sec" id="shop" style="max-width:1440px;margin:0 auto">
+    <div class="sec-hd">
+      <div><span class="label muted">MEN'S COLLECTION</span><h2>이번 시즌 신상품</h2></div>
+      <div class="tabs">${['ALL','OUTER','KNIT','TOP','BOTTOM'].map(c => `<button class="tab ${S.cat === c ? 'on' : ''}" data-cat="${c}">${c}</button>`).join('')}</div>
+    </div>
+    <div class="grid">${list.map(card).join('')}</div>
+  </section>`;
+}
+
+function detailView() {
+  const p = find(S.selId), ci = Math.min(S.color, p.colors.length - 1);
+  const related = PRODUCTS.filter(x => x.id !== p.id && x.cat === p.cat)
+    .concat(PRODUCTS.filter(x => x.id !== p.id && x.cat !== p.cat)).slice(0, 4);
+  return `
+  <main class="wrap" style="padding-top:16px;padding-bottom:96px">
+    <button class="back" data-go="home"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 18l-6-6 6-6"/></svg>BACK TO SHOP</button>
+    <div class="detail">
+      <div class="gallery">
+        <div class="thumb"><img src="${p.img}" alt="${esc(p.name)} 착용 전신 컷"></div>
+        <div class="thumb zoom"><img src="${p.img}" alt="${esc(p.name)} 디테일 컷"></div>
+      </div>
+      <div class="info">
+        <div style="display:flex;flex-direction:column;gap:8px">
+          <span class="label muted">${p.cat}</span>
+          <h1>${esc(p.name)}</h1>
+          <span class="en" style="font-size:18px;font-weight:500">${won(p.price)}</span>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:12px">
+          <span style="font-size:13px">컬러 — <span class="muted">${p.colors[ci][0]}</span></span>
+          <div style="display:flex;gap:10px">${p.colors.map((c, i) => `<button class="sw ${i === ci ? 'on' : ''}" data-color="${i}" aria-label="${c[0]}"><span style="background:${c[1]}"></span></button>`).join('')}</div>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:12px">
+          <div style="display:flex;justify-content:space-between;font-size:13px"><span>사이즈</span><span class="muted" style="text-decoration:underline">사이즈 가이드</span></div>
+          <div class="sizes">${p.sizes.map(z => `<button class="size ${S.size === z ? 'on' : ''}" data-size="${z}">${z}</button>`).join('')}</div>
+          ${S.sizeHint ? '<span class="err">사이즈를 선택해 주세요.</span>' : ''}
+        </div>
+        <div style="display:flex;flex-direction:column;gap:8px">
+          <button class="btn" id="addBtn">쇼핑백에 담기</button>
+          <button class="btn line" id="buyBtn">바로 구매</button>
+        </div>
+        <p style="margin:0;color:#3A3A38">${esc(p.desc)}</p>
+        <div class="rows">
+          <div><span>소재 및 관리</span><span>${esc(p.fabric)}</span></div>
+          <div><span>모델 정보</span><span>183cm · 착용 사이즈 L</span></div>
+          <div><span>배송</span><span>2–3일 이내 출고 · 10만원 이상 무료</span></div>
+          <div><span>교환 / 반품</span><span>수령 후 7일 이내</span></div>
+        </div>
+      </div>
+    </div>
+    <section style="margin-top:88px">
+      <h2 class="label" style="margin:0 0 24px;font-size:12px">YOU MAY ALSO LIKE</h2>
+      <div class="grid" style="grid-template-columns:repeat(auto-fill,minmax(200px,1fr));row-gap:32px">${related.map(card).join('')}</div>
+    </section>
+  </main>`;
+}
+
+function checkoutView() {
+  const t = totals();
+  if (!S.cart.length) return `
+  <main class="co"><h1 class="en" style="margin:0 0 36px;font-size:28px;font-weight:600;letter-spacing:.12em">CHECKOUT</h1>
+    <div style="border-top:1px solid #111;padding:72px 0;text-align:center;display:flex;flex-direction:column;align-items:center;gap:20px">
+      <span style="color:#3A3A38">쇼핑백이 비어 있습니다.</span>
+      <button class="btn en" data-go="shop">SHOP NOW</button>
+    </div></main>`;
+  return `
+  <main class="co">
+    <div style="display:flex;flex-wrap:wrap;justify-content:space-between;align-items:baseline;gap:12px;margin-bottom:36px">
+      <h1 class="en" style="margin:0;font-size:28px;font-weight:600;letter-spacing:.12em">CHECKOUT</h1>
+      <button class="link" data-go="home" style="font-size:13px;min-height:44px">쇼핑 계속하기</button>
+    </div>
+    <div class="co-grid">
+      <div class="co-form">
+        <section><h2 class="label step">01 · 주문자 정보</h2>
+          <div class="fields">
+            <label class="f">이름<input id="buyer" type="text" placeholder="홍길동" value="${esc(S.buyer)}"></label>
+            <label class="f">연락처<input type="tel" placeholder="010-0000-0000"></label>
+            <label class="f">이메일<input type="email" placeholder="name@example.com"></label>
+          </div></section>
+        <section><h2 class="label step">02 · 배송지</h2>
+          <div style="display:flex;gap:12px;flex-wrap:wrap;align-items:flex-end;margin-bottom:20px">
+            <label class="f" style="flex:1 1 280px">주소<input type="text" placeholder="도로명 주소"></label>
+            <button class="btn line" style="min-height:44px;padding:0 18px;font-size:13px;font-weight:400">주소 검색</button>
+          </div>
+          <div class="fields">
+            <label class="f">상세 주소<input type="text" placeholder="동, 호수"></label>
+            <label class="f">배송 요청사항<select><option>문 앞에 놓아주세요</option><option>경비실에 맡겨주세요</option><option>배송 전 연락 바랍니다</option></select></label>
+          </div></section>
+        <section><h2 class="label step" style="margin-bottom:8px">03 · 결제 수단</h2>
+          ${METHODS.map(m => `<button class="method ${S.method === m[0] ? 'on' : ''}" data-method="${m[0]}"><span class="radio"></span><span style="flex-grow:1">${m[1]}</span><span class="muted" style="font-size:12px">${m[2]}</span></button>`).join('')}
+        </section>
+      </div>
+      <aside>
+        <h2 class="label" style="margin:0;font-size:12px">ORDER SUMMARY (${t.count})</h2>
+        ${S.cart.map((it, i) => { const p = find(it.id); return `
+          <div class="line-item">
+            <div class="thumb"><img src="${p.img}" alt="${esc(p.name)}"></div>
+            <div style="flex-grow:1;min-width:0;display:flex;flex-direction:column;gap:2px">
+              <span style="font-size:13px;font-weight:500">${esc(p.name)}</span>
+              <span class="muted" style="font-size:12px">${p.colors[it.color][0]} / ${it.size} / ${it.qty}개</span>
+              <span class="en" style="font-size:13px;margin-top:4px">${won(p.price * it.qty)}</span>
+            </div>
+            <button class="link" data-remove="${i}" style="min-height:32px">삭제</button>
+          </div>`; }).join('')}
+        <div style="border-top:1px solid #DAD8D3;padding-top:18px;display:flex;flex-direction:column;gap:10px;font-size:13px">
+          <div class="sum"><span style="color:#4A4A47">상품 금액</span><span class="en">${won(t.sub)}</span></div>
+          <div class="sum"><span style="color:#4A4A47">배송비</span><span class="en">${t.ship ? won(t.ship) : '무료'}</span></div>
+        </div>
+        <div class="sum" style="border-top:1px solid #111;padding-top:16px;align-items:baseline"><span style="font-weight:600">총 결제 금액</span><span class="en" style="font-size:22px;font-weight:600">${won(t.total)}</span></div>
+        <label class="agree"><input type="checkbox" id="agree" ${S.agree ? 'checked' : ''}>주문 내용을 확인했으며 결제 진행에 동의합니다. (필수)</label>
+        <button class="btn" id="payBtn" style="min-height:56px" ${S.agree ? '' : 'disabled'}>${S.agree ? won(t.total) + ' 결제하기' : '필수 동의 후 결제할 수 있어요'}</button>
+      </aside>
+    </div>
+  </main>`;
+}
+
+function doneView() {
+  const d = S.done;
+  return `
+  <main class="done">
+    <span class="label muted">ORDER CONFIRMED</span>
+    <h1 style="margin:0;font-size:30px;font-weight:700;letter-spacing:-.02em">주문이 완료되었습니다</h1>
+    <p style="margin:0;color:#3A3A38">${d.buyer ? esc(d.buyer) + '님, ' : ''}주문해 주셔서 감사합니다. 상품이 출고되면 알려드릴게요.</p>
+    <div class="rows">
+      <div><span>주문번호</span><span class="en" style="color:#111;font-weight:600">${d.no}</span></div>
+      <div><span>결제 수단</span><span style="color:#111">${d.method}</span></div>
+      <div><span>결제 금액</span><span class="en" style="color:#111;font-weight:600">${won(d.total)}</span></div>
+    </div>
+    <button class="btn en" data-go="home" style="margin-top:24px">CONTINUE SHOPPING</button>
+  </main>`;
+}
+
+function render() {
+  app.innerHTML = { home: homeView, detail: detailView, checkout: checkoutView, done: doneView }[S.screen]();
+  document.getElementById('bagCount').textContent = totals().count;
+}
+
+function showToast(p, ci) {
+  const el = document.getElementById('toast');
+  el.innerHTML = `<div class="toast" role="status">
+    <span class="label">ADDED TO BAG</span>
+    <div style="display:flex;gap:12px;align-items:center"><div class="thumb"><img src="${p.img}" alt=""></div>
+    <span style="font-size:13px">${esc(p.name)} · ${p.colors[ci][0]} / ${S.size}</span></div>
+    <button class="btn" data-go="checkout" style="min-height:46px;font-size:13px">결제하러 가기</button></div>`;
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => { el.innerHTML = ''; }, 3000);
+}
+
+document.addEventListener('click', e => {
+  const b = e.target.closest('button');
+  if (!b) return;
+  const d = b.dataset;
+  if (d.go === 'shop') { go('home', { cat: 'ALL' }); document.getElementById('shop').scrollIntoView({ behavior: 'smooth' }); return; }
+  if (d.go) { document.getElementById('toast').innerHTML = ''; return go(d.go); }
+  if (d.open) return go('detail', { selId: d.open, color: 0, size: null, sizeHint: false });
+  if (d.cat) { S.cat = d.cat; return render(); }
+  if (d.color) { S.color = +d.color; return render(); }
+  if (d.size) { S.size = d.size; S.sizeHint = false; return render(); }
+  if (d.method) { S.method = d.method; return render(); }
+  if (d.remove) { S.cart.splice(+d.remove, 1); return render(); }
+  if (b.id === 'addBtn' || b.id === 'buyBtn') {
+    if (!S.size) { S.sizeHint = true; return render(); }
+    addCurrent();
+    if (b.id === 'buyBtn') return go('checkout');
+    render();
+    return showToast(find(S.selId), S.color);
+  }
+  if (b.id === 'payBtn' && S.agree && S.cart.length) {
+    const t = totals();
+    const m = METHODS.find(x => x[0] === S.method);
+    S.done = { no: 'BS' + String(Date.now()).slice(-8), total: t.total, method: m[1], buyer: S.buyer };
+    S.cart = []; S.agree = false;
+    go('done');
+  }
+});
+document.addEventListener('input', e => { if (e.target.id === 'buyer') S.buyer = e.target.value; });
+document.addEventListener('change', e => { if (e.target.id === 'agree') { S.agree = e.target.checked; render(); } });
+
+render();
+</script>
+</body>
+</html>
