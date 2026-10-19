@@ -86,7 +86,13 @@ aside{flex:1 1 340px;min-width:0;background:#F4F3F0;padding:32px 28px;display:fl
 .toast{position:fixed;right:24px;bottom:24px;width:360px;max-width:calc(100% - 48px);background:#fff;border:1px solid #111;padding:16px;display:flex;flex-direction:column;gap:14px;box-shadow:0 12px 32px rgba(0,0,0,.12)}
 .toast .thumb{width:52px}
 footer{border-top:1px solid #ECECEA}
-footer .wrap{padding:32px;display:flex;flex-wrap:wrap;justify-content:space-between;gap:12px;font-size:12px;color:#6B6B68}
+footer .ft{padding:40px 32px 48px;display:flex;flex-direction:column;gap:20px;font-size:12px;color:#6B6B68}
+.ft-top{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:12px}
+.biz{margin:0;display:flex;flex-wrap:wrap;gap:6px 24px;padding-top:20px;border-top:1px solid #ECECEA}
+.biz div{display:flex;gap:8px}
+.biz dt{color:#111;font-weight:600}
+.biz dd{margin:0}
+@media (max-width:640px){footer .ft{padding:32px 16px 40px}.biz{flex-direction:column}}
 @media (max-width:640px){
   .wrap,.sec,.co{padding-left:16px;padding-right:16px}
   .nav{display:none}
@@ -115,7 +121,19 @@ footer .wrap{padding:32px;display:flex;flex-wrap:wrap;justify-content:space-betw
 <div id="app"></div>
 <div id="toast"></div>
 <footer>
-  <div class="wrap"><span style="font-weight:800;letter-spacing:.24em;color:#111;font-size:14px">비숍</span><span>고객센터 [YOUR PHONE] · [YOUR EMAIL]</span></div>
+  <div class="wrap ft">
+    <div class="ft-top">
+      <span style="font-weight:800;letter-spacing:.24em;color:#111;font-size:14px">비숍</span>
+      <span>고객센터 070-7730-2239 · support@10it.ai</span>
+    </div>
+    <dl class="biz">
+      <div><dt>회사명</dt><dd>(주)테닛</dd></div>
+      <div><dt>대표자</dt><dd>정승헌</dd></div>
+      <div><dt>사업자등록번호</dt><dd>405-87-03576</dd></div>
+      <div><dt>주소</dt><dd>경기도 수원시 영통구 광교로146, 10층 1003호, A16번</dd></div>
+    </dl>
+    <span class="en" style="font-size:11px;letter-spacing:.08em">© 2026 TENIT Inc. All rights reserved.</span>
+  </div>
 </footer>
 
 <script>
