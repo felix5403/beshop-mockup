@@ -6,6 +6,7 @@
 <title>비숍 BESHOP</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700&family=Gothic+A1:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<script src="https://pay.nicepay.co.kr/v1/js/"></script>
 <style>
 *{box-sizing:border-box}
 body{margin:0;background:#fff;color:#111;font-family:'Gothic A1',system-ui,sans-serif;font-size:14px;line-height:1.6;letter-spacing:-.01em}
@@ -81,6 +82,7 @@ aside{flex:1 1 340px;min-width:0;background:#F4F3F0;padding:32px 28px;display:fl
 .link{background:none;border:0;padding:0;color:#6B6B68;font-size:12px;text-decoration:underline}
 .agree{display:flex;gap:10px;align-items:flex-start;font-size:12px;color:#4A4A47;cursor:pointer}
 .agree input{width:18px;height:18px;margin:1px 0 0;accent-color:#111;flex-shrink:0}
+.pay-err{background:#FBEDEA;color:#8A2A17;padding:12px 14px;font-size:13px}
 .done{max-width:560px;margin:0 auto;padding:96px 32px 120px;display:flex;flex-direction:column;align-items:center;gap:18px;text-align:center}
 .done .rows{width:100%;margin-top:24px;border-top:1px solid #111;text-align:left}
 .toast{position:fixed;right:24px;bottom:24px;width:360px;max-width:calc(100% - 48px);background:#fff;border:1px solid #111;padding:16px;display:flex;flex-direction:column;gap:14px;box-shadow:0 12px 32px rgba(0,0,0,.12)}
@@ -92,17 +94,19 @@ footer .ft{padding:40px 32px 48px;display:flex;flex-direction:column;gap:20px;fo
 .biz div{display:flex;gap:8px}
 .biz dt{color:#111;font-weight:600}
 .biz dd{margin:0}
-@media (max-width:640px){footer .ft{padding:32px 16px 40px}.biz{flex-direction:column}}
 @media (max-width:640px){
   .wrap,.sec,.co{padding-left:16px;padding-right:16px}
   .nav{display:none}
   .hd{grid-template-columns:auto 1fr}
   .hero>div{height:520px}
   .hero h1{font-size:32px}
+  footer .ft{padding:32px 16px 40px}
+  .biz{flex-direction:column}
 }
 </style>
 </head>
 <body>
+<div class="notice en">TEST MODE — 나이스페이 테스트 결제로 실제 청구되지 않습니다</div>
 <header>
   <div class="wrap hd">
     <nav class="nav">
@@ -136,6 +140,9 @@ footer .ft{padding:40px 32px 48px;display:flex;flex-direction:column;gap:20px;fo
 </footer>
 
 <script>
+// ▼ 나이스페이 클라이언트 키 (나이스페이 개발자정보 화면의 Client Key로 교체)
+const NICEPAY_CLIENT_ID = 'S2_af4543a0be4d49a98122e01ec2059a56';
+
 const TOP = ['S','M','L','XL','XXL'], BOTTOM = ['28','30','32','34','36'];
 const PRODUCTS = [
   { id:'p7', name:'싱글 발마칸 코트', cat:'OUTER', price:289000, img:'images/look07.jpg', isNew:true, sizes:TOP, fabric:'코튼 100% · 드라이클리닝', colors:[['베이지','#C4AE8A'],['블랙','#222221']], desc:'라글란 소매로 어깨선을 부드럽게 떨어뜨린 발마칸 코트. 무릎 아래 기장으로 어떤 룩에도 여유를 더해요.' },
@@ -149,19 +156,30 @@ const PRODUCTS = [
   { id:'p3', name:'헤비 스웨트 후디', cat:'TOP', price:79000, img:'images/look03.jpg', isNew:true, sizes:TOP, fabric:'코튼 100% · 물세탁', colors:[['멜란지 그레이','#A9A9A6'],['블랙','#222221']], desc:'쫀쫀한 기모 스웨트로 만든 오버핏 후디. 넉넉한 캥거루 포켓.' },
   { id:'p10', name:'투턱 와이드 슬랙스', cat:'BOTTOM', price:99000, img:'images/look10.jpg', isNew:false, sizes:BOTTOM, fabric:'울 30% · 폴리 70% · 드라이클리닝', colors:[['블랙','#1C1C1B'],['차콜','#3A3936']], desc:'투턱 디테일로 여유를 준 와이드 슬랙스. 발등을 덮는 기장으로 곧게 떨어져요.' }
 ];
+// [나이스페이 method 값, 표시 이름, 설명]
 const METHODS = [
-  ['card','신용 / 체크카드','카드사 결제창 연결 (목업)'],
-  ['easy','간편결제','간편결제 앱 연결 (목업)'],
-  ['bank','무통장입금','24시간 이내 입금'],
-  ['phone','휴대폰 결제','본인 인증 후 결제']
+  ['card','신용 / 체크카드','모든 카드사'],
+  ['kakaopay','카카오페이','간편결제'],
+  ['naverpayCard','네이버페이','간편결제'],
+  ['bank','실시간 계좌이체','은행 계좌'],
+  ['vbank','가상계좌','무통장입금']
 ];
+const METHOD_LABEL = { card:'신용카드', kakaopay:'카카오페이', naverpayCard:'네이버페이', naverpay:'네이버페이', bank:'계좌이체', vbank:'가상계좌' };
 
-const S = { screen:'home', cat:'ALL', selId:'p7', color:0, size:null, sizeHint:false, cart:[], method:'card', agree:false, buyer:'', done:null };
+const S = { screen:'home', cat:'ALL', selId:'p7', color:0, size:null, sizeHint:false, cart:[], method:'card', agree:false, buyer:'', tel:'', email:'', payError:'', paying:false, done:null };
 const app = document.getElementById('app');
-const won = n => '₩' + n.toLocaleString('ko-KR');
+const won = n => '₩' + Number(n).toLocaleString('ko-KR');
 const find = id => PRODUCTS.find(p => p.id === id) || PRODUCTS[0];
 const esc = s => String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 let toastTimer;
+
+// 결제창에서 돌아올 때 쇼핑백이 유지되도록 저장
+function save() {
+  try { sessionStorage.setItem('beshop', JSON.stringify({ cart: S.cart, buyer: S.buyer, tel: S.tel, email: S.email, method: S.method })); } catch (e) {}
+}
+function load() {
+  try { Object.assign(S, JSON.parse(sessionStorage.getItem('beshop') || '{}')); } catch (e) {}
+}
 
 function go(screen, extra = {}) {
   Object.assign(S, { screen }, extra);
@@ -257,6 +275,7 @@ function checkoutView() {
   const t = totals();
   if (!S.cart.length) return `
   <main class="co"><h1 class="en" style="margin:0 0 36px;font-size:28px;font-weight:600;letter-spacing:.12em">CHECKOUT</h1>
+    ${S.payError ? `<div class="pay-err" style="margin-bottom:24px">${esc(S.payError)}</div>` : ''}
     <div style="border-top:1px solid #111;padding:72px 0;text-align:center;display:flex;flex-direction:column;align-items:center;gap:20px">
       <span style="color:#3A3A38">쇼핑백이 비어 있습니다.</span>
       <button class="btn en" data-go="shop">SHOP NOW</button>
@@ -272,8 +291,8 @@ function checkoutView() {
         <section><h2 class="label step">01 · 주문자 정보</h2>
           <div class="fields">
             <label class="f">이름<input id="buyer" type="text" placeholder="홍길동" value="${esc(S.buyer)}"></label>
-            <label class="f">연락처<input type="tel" placeholder="010-0000-0000"></label>
-            <label class="f">이메일<input type="email" placeholder="name@example.com"></label>
+            <label class="f">연락처<input id="tel" type="tel" placeholder="010-0000-0000" value="${esc(S.tel)}"></label>
+            <label class="f">이메일<input id="email" type="email" placeholder="name@example.com" value="${esc(S.email)}"></label>
           </div></section>
         <section><h2 class="label step">02 · 배송지</h2>
           <div style="display:flex;gap:12px;flex-wrap:wrap;align-items:flex-end;margin-bottom:20px">
@@ -305,8 +324,9 @@ function checkoutView() {
           <div class="sum"><span style="color:#4A4A47">배송비</span><span class="en">${t.ship ? won(t.ship) : '무료'}</span></div>
         </div>
         <div class="sum" style="border-top:1px solid #111;padding-top:16px;align-items:baseline"><span style="font-weight:600">총 결제 금액</span><span class="en" style="font-size:22px;font-weight:600">${won(t.total)}</span></div>
+        ${S.payError ? `<div class="pay-err" role="alert">${esc(S.payError)}</div>` : ''}
         <label class="agree"><input type="checkbox" id="agree" ${S.agree ? 'checked' : ''}>주문 내용을 확인했으며 결제 진행에 동의합니다. (필수)</label>
-        <button class="btn" id="payBtn" style="min-height:56px" ${S.agree ? '' : 'disabled'}>${S.agree ? won(t.total) + ' 결제하기' : '필수 동의 후 결제할 수 있어요'}</button>
+        <button class="btn" id="payBtn" style="min-height:56px" ${S.agree && !S.paying ? '' : 'disabled'}>${S.paying ? '결제창을 여는 중…' : S.agree ? won(t.total) + ' 결제하기' : '필수 동의 후 결제할 수 있어요'}</button>
       </aside>
     </div>
   </main>`;
@@ -317,12 +337,15 @@ function doneView() {
   return `
   <main class="done">
     <span class="label muted">ORDER CONFIRMED</span>
-    <h1 style="margin:0;font-size:30px;font-weight:700;letter-spacing:-.02em">주문이 완료되었습니다</h1>
-    <p style="margin:0;color:#3A3A38">${d.buyer ? esc(d.buyer) + '님, ' : ''}주문해 주셔서 감사합니다. 상품이 출고되면 알려드릴게요.</p>
+    <h1 style="margin:0;font-size:30px;font-weight:700;letter-spacing:-.02em">${d.vbank ? '주문이 접수되었습니다' : '결제가 완료되었습니다'}</h1>
+    <p style="margin:0;color:#3A3A38">${d.buyer ? esc(d.buyer) + '님, ' : ''}${d.vbank ? '아래 계좌로 입금해 주시면 주문이 확정됩니다.' : '주문해 주셔서 감사합니다. 상품이 출고되면 알려드릴게요.'}</p>
     <div class="rows">
-      <div><span>주문번호</span><span class="en" style="color:#111;font-weight:600">${d.no}</span></div>
-      <div><span>결제 수단</span><span style="color:#111">${d.method}</span></div>
+      <div><span>주문번호</span><span class="en" style="color:#111;font-weight:600">${esc(d.no)}</span></div>
+      <div><span>결제 수단</span><span style="color:#111">${esc(d.method)}</span></div>
+      ${d.vbank ? `<div><span>입금 계좌</span><span style="color:#111">${esc(d.vbank)}</span></div>` : ''}
+      ${d.vbankExp ? `<div><span>입금 기한</span><span style="color:#111">${esc(d.vbankExp)}</span></div>` : ''}
       <div><span>결제 금액</span><span class="en" style="color:#111;font-weight:600">${won(d.total)}</span></div>
+      <div><span>거래번호(TID)</span><span class="en" style="font-size:12px">${esc(d.tid || '-')}</span></div>
     </div>
     <button class="btn en" data-go="home" style="margin-top:24px">CONTINUE SHOPPING</button>
   </main>`;
@@ -331,6 +354,7 @@ function doneView() {
 function render() {
   app.innerHTML = { home: homeView, detail: detailView, checkout: checkoutView, done: doneView }[S.screen]();
   document.getElementById('bagCount').textContent = totals().count;
+  save();
 }
 
 function showToast(p, ci) {
@@ -344,12 +368,75 @@ function showToast(p, ci) {
   toastTimer = setTimeout(() => { el.innerHTML = ''; }, 3000);
 }
 
+// ▼ 나이스페이 결제창 호출
+function requestNicePay() {
+  if (typeof AUTHNICE === 'undefined') {
+    S.payError = '결제 모듈을 불러오지 못했습니다. 새로고침 후 다시 시도해 주세요.';
+    return render();
+  }
+  const t = totals();
+  const qtyById = {};
+  S.cart.forEach(it => { qtyById[it.id] = (qtyById[it.id] || 0) + it.qty; });
+  const first = find(S.cart[0].id);
+  const goodsName = S.cart.length > 1 ? `${first.name} 외 ${S.cart.length - 1}건` : first.name;
+  const orderId = 'BS' + Date.now() + Math.random().toString(36).slice(2, 6).toUpperCase();
+
+  const params = {
+    clientId: NICEPAY_CLIENT_ID,
+    method: S.method,
+    orderId,
+    amount: t.total,
+    goodsName,
+    mallReserved: Object.entries(qtyById).map(([id, q]) => `${id}:${q}`).join(','),
+    returnUrl: location.origin + '/api/nicepay/return',
+    fnError: result => {
+      S.paying = false;
+      S.payError = (result && result.errorMsg) || '결제가 취소되었습니다.';
+      render();
+    }
+  };
+  if (S.buyer) params.buyerName = S.buyer;
+  if (S.tel) params.buyerTel = S.tel.replace(/[^0-9]/g, '');
+  if (S.email) params.buyerEmail = S.email;
+
+  S.payError = '';
+  S.paying = true;
+  render();
+  setTimeout(() => { S.paying = false; render(); }, 4000);
+  AUTHNICE.requestPay(params);
+}
+
+// ▼ 승인 결과(서버에서 리다이렉트) 처리
+function handleReturn() {
+  const q = new URLSearchParams(location.search);
+  const pay = q.get('pay');
+  if (!pay) return false;
+  history.replaceState(null, '', location.pathname);
+  if (pay === 'success') {
+    S.done = {
+      no: q.get('orderId') || '',
+      total: Number(q.get('amount') || 0),
+      method: (METHOD_LABEL[q.get('method')] || q.get('method') || '') + (q.get('card') ? ` (${q.get('card')})` : ''),
+      tid: q.get('tid') || '',
+      vbank: q.get('vbank') || '',
+      vbankExp: q.get('vbankExp') || '',
+      buyer: S.buyer
+    };
+    S.cart = []; S.agree = false;
+    go('done');
+  } else {
+    S.payError = q.get('msg') || '결제에 실패했습니다.';
+    go('checkout');
+  }
+  return true;
+}
+
 document.addEventListener('click', e => {
   const b = e.target.closest('button');
   if (!b) return;
   const d = b.dataset;
   if (d.go === 'shop') { go('home', { cat: 'ALL' }); document.getElementById('shop').scrollIntoView({ behavior: 'smooth' }); return; }
-  if (d.go) { document.getElementById('toast').innerHTML = ''; return go(d.go); }
+  if (d.go) { document.getElementById('toast').innerHTML = ''; return go(d.go, { payError: '' }); }
   if (d.open) return go('detail', { selId: d.open, color: 0, size: null, sizeHint: false });
   if (d.cat) { S.cat = d.cat; return render(); }
   if (d.color) { S.color = +d.color; return render(); }
@@ -363,18 +450,18 @@ document.addEventListener('click', e => {
     render();
     return showToast(find(S.selId), S.color);
   }
-  if (b.id === 'payBtn' && S.agree && S.cart.length) {
-    const t = totals();
-    const m = METHODS.find(x => x[0] === S.method);
-    S.done = { no: 'BS' + String(Date.now()).slice(-8), total: t.total, method: m[1], buyer: S.buyer };
-    S.cart = []; S.agree = false;
-    go('done');
-  }
+  if (b.id === 'payBtn' && S.agree && S.cart.length && !S.paying) requestNicePay();
 });
-document.addEventListener('input', e => { if (e.target.id === 'buyer') S.buyer = e.target.value; });
+document.addEventListener('input', e => {
+  if (e.target.id === 'buyer') S.buyer = e.target.value;
+  if (e.target.id === 'tel') S.tel = e.target.value;
+  if (e.target.id === 'email') S.email = e.target.value;
+  if (['buyer', 'tel', 'email'].includes(e.target.id)) save();
+});
 document.addEventListener('change', e => { if (e.target.id === 'agree') { S.agree = e.target.checked; render(); } });
 
-render();
+load();
+if (!handleReturn()) render();
 </script>
 </body>
 </html>
